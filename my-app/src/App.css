@@ -1,0 +1,18 @@
+Webkit browsers
+.scrollbar-custom::-webkit-scrollbar {
+  width: 2px; 
+}
+
+.scrollbar-custom::-webkit-scrollbar-track {
+  background: transparent; 
+}
+
+.scrollbar-custom::-webkit-scrollbar-thumb {
+  background-color:white; 
+  border-radius: 10px;       
+  border: 2px solid transparent;
+}
+
+.scrollbar-custom::-webkit-scrollbar-thumb:hover {
+  background-color: #2563eb;
+}
