@@ -13,7 +13,6 @@ const ChatInterface = () => {
   const [chats, setChats] = useState([]);
   const [theme, setTheme] = useState('dark');
   const [currentChat, setCurrentChat] = useState(null);
-  const [newSessionId, setNewSessionId] = useState(null);
   const [MessageSentToggle, setMessageSentToggle] = useState(false);
   const [aiIsthinking, setAIisThinking] = useState(false)
 
@@ -33,17 +32,6 @@ const ChatInterface = () => {
     };
     fetchData();
   }, [MessageSentToggle]);
-
-
-  useEffect(() => {
-    if (!newSessionId || !chats.length) return;
-
-    const exists = chats.some(chat => chat._id === newSessionId);
-    if (exists) {
-      setActiveChat(newSessionId);
-      setNewSessionId(null);
-    }
-  }, [newSessionId, chats]);
 
   useEffect(() => {
     if (!activeChat) return;
@@ -65,15 +53,9 @@ const ChatInterface = () => {
         message: sendMessage,
         sessionId: currentChat?.sessionId || null,
       });
-      setNewSessionId(response?.data.id);
-      setMessageSentToggle(prev => !prev);;
-      if (currentChat) {
-        const updatedChat = {
-          ...currentChat,
-          messages: [...currentChat.messages, { question: message, answer: response.data.answer }]
-        };
-        setCurrentChat(updatedChat);
-      }
+
+      setActiveChat(response?.data.id)
+      setMessageSentToggle(prev => !prev);
     } catch (error) {
       const errorMessage = error?.response?.data?.message || "Failed to generate response";
       toast.error(errorMessage);
@@ -101,7 +83,7 @@ const ChatInterface = () => {
           <button
             onClick={() => {
               setCurrentChat(null);
-              setActiveChat(0)
+              setActiveChat(null)
             }}
             className={`flex items-center space-x-3 w-full p-3 mb-4 rounded-lg transition-colors ${isDark ? 'bg-gray-700 hover:bg-gray-600' : 'bg-gray-100 hover:bg-gray-200'
               }`}
