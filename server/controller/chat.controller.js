@@ -16,14 +16,14 @@ const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash" });
 
 export const askAI = async (req, res) => {
   try {
-    const { message, sessionId } = req.body;
+    const { message, id } = req.body;
     if (!message) return res.status(400).json({ error: "Message required" });
 
     const response = await model.generateContent(message);
 
     const aiResponse = response?.response.text() || "No response";
 
-    let session = sessionId ? await ChatSession.findOne({ sessionId }) : null;
+    let session = id ? await ChatSession.findById(id) : null;
 
     if (!session) {
       session = await ChatSession.create({
@@ -43,6 +43,7 @@ export const askAI = async (req, res) => {
       success: true,
       sessionId: session.sessionId,
       aiResponse,
+      id: session._id,
       messages: session.messages,
     });
   } catch (err) {
@@ -55,7 +56,7 @@ export const askAI = async (req, res) => {
 
 export const askAINEW = async (req, res) => {
   try {
-    const { message, sessionId } = req.body;
+    const { message, id } = req.body;
     if (!message) return res.status(400).json({ error: "Message required" });
 
     const response = await ai.models.generateContent({
@@ -65,7 +66,9 @@ export const askAINEW = async (req, res) => {
 
     const aiResponse = response?.text || "No response";
 
-    let session = sessionId ? await ChatSession.findOne({ sessionId }) : null;
+    let session = id ? await ChatSession.findById(id) : null;
+    console.log("this api called");
+    console.log(session);
 
     if (!session) {
       session = await ChatSession.create({

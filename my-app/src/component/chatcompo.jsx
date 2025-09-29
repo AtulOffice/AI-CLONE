@@ -51,7 +51,7 @@ const ChatInterface = () => {
       setMessage("");
       const response = await axios.post(`${process.env.REACT_APP_LOCAL}/asknew`, {
         message: sendMessage,
-        sessionId: currentChat?.sessionId || null,
+        id: currentChat?._id || null,
       });
 
       setActiveChat(response?.data.id)
@@ -106,7 +106,8 @@ const ChatInterface = () => {
             >
               {sidebarOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
             </button>
-            <h1 className="text-xl font-semibold">{currentChat > 0 ? currentChat?.messages[0]?.question : 'ASK SOMETHING'}</h1>
+            <h1 className="text-xl font-semibold">{currentChat ? currentChat?.messages[0]?.question : 'ASK SOMETHING'}</h1>
+
           </div>
 
           <button
