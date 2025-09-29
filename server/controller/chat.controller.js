@@ -3,6 +3,7 @@ import { GoogleGenAI } from "@google/genai";
 import { v4 as uuidv4 } from "uuid";
 import { GoogleGenerativeAI } from "@google/generative-ai";
 import dotenv from "dotenv";
+import mongoose from "mongoose";
 dotenv.config({ quiet: true });
 
 const ai = new GoogleGenAI({
@@ -82,7 +83,7 @@ export const askAINEW = async (req, res) => {
 
     res.status(200).json({
       success: true,
-       id:session._id,
+      id: session._id,
       sessionId: session.sessionId,
       aiResponse,
       messages: session.messages,
@@ -119,23 +120,20 @@ export const getAllChatsFull = async (req, res) => {
 
 //  for specific chat
 
-export const getChatBySessionId = async (req, res) => {
+export const getChatById = async (req, res) => {
   try {
-    const { sessionId } = req.params;
-
-    if (!sessionId) {
-      return res.status(400).json({ error: "sessionId is required" });
+    const { id } = req.params;
+    if (!id) {
+      return res.status(400).json({ error: "id is required" });
     }
-
-    const messages = await ChatSession.find({ sessionId });
-
-    if (!messages || messages.length === 0) {
-      return res
-        .status(404)
-        .json({ error: "No messages found for this session" });
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+      return res.status(400).json({ error: "Invalid MongoDB id" });
     }
-
-    res.status(200).json(messages);
+    const message = await ChatSession.findById(id);
+    if (!message) {
+      return res.status(404).json({ error: "No message found with this id" });
+    }
+    res.status(200).json({ success: true, message });
   } catch (err) {
     console.error(err);
     res.status(500).json({ error: "Server error", details: err.message });
