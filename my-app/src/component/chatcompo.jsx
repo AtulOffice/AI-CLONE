@@ -43,7 +43,6 @@ const ChatInterface = () => {
   useEffect(() => {
     const fetchAllChats = async () => {
       try {
-        console.log("calling time all")
         const response = await axios.get(`${process.env.REACT_APP_LOCAL}/allchat`);
         setChats(response?.data);
       } catch (error) {
@@ -64,7 +63,6 @@ const ChatInterface = () => {
 
     if (!activeChat) return;
     const fetchSingleChat = async () => {
-      console.log("calling time single")
       try {
         const response = await axios.get(
           `${process.env.REACT_APP_LOCAL}/chat/${activeChat}`
