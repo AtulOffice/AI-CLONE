@@ -67,9 +67,7 @@ export const askAINEW = async (req, res) => {
     const aiResponse = response?.text || "No response";
 
     let session = id ? await ChatSession.findById(id) : null;
-    console.log("this api called");
-    console.log(session);
-
+  
     if (!session) {
       session = await ChatSession.create({
         sessionId: uuidv4(),
