@@ -16,28 +16,69 @@ const ChatInterface = () => {
   const [MessageSentToggle, setMessageSentToggle] = useState(false);
   const [aiIsthinking, setAIisThinking] = useState(false)
 
+  // useEffect(() => {
+  //   const fetchData = async () => {
+  //     try {
+  //       const response = await axios.get(`${process.env.REACT_APP_LOCAL}/allchat`);
+  //       setChats(response?.data);
+  //     } catch (error) {
+  //       console.error("❌ Error fetching data:", error);
+
+  //       const errorMessage =
+  //         error?.response?.data?.message || "Something went wrong";
+
+  //       toast.error(errorMessage);
+  //     }
+  //   };
+  //   fetchData();
+  // }, [MessageSentToggle]);
+
+  // useEffect(() => {
+  //   if (!activeChat) return;
+  //   const chat = chats.find(chat => chat._id === activeChat);
+  //   setCurrentChat(chat || null);
+  // }, [chats, activeChat]);
+
+
   useEffect(() => {
-    const fetchData = async () => {
+    const fetchAllChats = async () => {
       try {
+        console.log("calling time all")
         const response = await axios.get(`${process.env.REACT_APP_LOCAL}/allchat`);
         setChats(response?.data);
       } catch (error) {
         console.error("❌ Error fetching data:", error);
-
         const errorMessage =
           error?.response?.data?.message || "Something went wrong";
-
         toast.error(errorMessage);
       }
     };
-    fetchData();
+
+    if (!currentChat?._id) {
+      fetchAllChats();
+    }
   }, [MessageSentToggle]);
 
+
   useEffect(() => {
+
     if (!activeChat) return;
-    const chat = chats.find(chat => chat._id === activeChat);
-    setCurrentChat(chat || null);
-  }, [chats, activeChat]);
+    const fetchSingleChat = async () => {
+      console.log("calling time single")
+      try {
+        const response = await axios.get(
+          `${process.env.REACT_APP_LOCAL}/chat/${activeChat}`
+        );
+        setCurrentChat(response?.data.message);
+      } catch (error) {
+        console.error("❌ Error fetching single chat:", error);
+        toast.error(error?.response?.data?.message || "Something went wrong");
+      }
+    };
+
+    fetchSingleChat();
+  }, [activeChat, MessageSentToggle]);
+
 
   const handlesendMessage = async () => {
     setAIisThinking(true)
