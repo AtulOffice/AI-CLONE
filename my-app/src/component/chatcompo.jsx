@@ -17,23 +17,6 @@ const ChatInterface = () => {
   const [aiIsthinking, setAIisThinking] = useState(false)
 
   // useEffect(() => {
-  //   const fetchData = async () => {
-  //     try {
-  //       const response = await axios.get(`${process.env.REACT_APP_LOCAL}/allchat`);
-  //       setChats(response?.data);
-  //     } catch (error) {
-  //       console.error("❌ Error fetching data:", error);
-
-  //       const errorMessage =
-  //         error?.response?.data?.message || "Something went wrong";
-
-  //       toast.error(errorMessage);
-  //     }
-  //   };
-  //   fetchData();
-  // }, [MessageSentToggle]);
-
-  // useEffect(() => {
   //   if (!activeChat) return;
   //   const chat = chats.find(chat => chat._id === activeChat);
   //   setCurrentChat(chat || null);
