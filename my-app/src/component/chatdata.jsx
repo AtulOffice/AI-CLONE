@@ -1,6 +1,9 @@
-import React from 'react'
+import { useEffect, useRef } from "react";
+
 
 const Chatdata = ({ currentChat, theme }) => {
+    const messagesEndRef = useRef(null);
+
     const isDark = theme === 'dark';
     const formatAnswer = (text) => {
         if (!text) return null;
@@ -87,6 +90,16 @@ const Chatdata = ({ currentChat, theme }) => {
         });
     };
 
+    const scrollToBottom = () => {
+        messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+    };
+
+
+    useEffect(() => {
+        scrollToBottom();
+    }, [currentChat?.messages]);
+
+
     return (
         <>
             <div className="flex-1 overflow-y-auto p-6 scrollbar-custom sidebar">
@@ -125,6 +138,7 @@ const Chatdata = ({ currentChat, theme }) => {
                         ))}
                     </div>
                 )}
+                <div ref={messagesEndRef} />
             </div>
         </>
     )
